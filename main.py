@@ -6,9 +6,9 @@ from dataclasses import dataclass
 pg.init()
 pg.font.init()
 
-screen_size_x = 900
-screen_size_y = 900
-screen = pg.display.set_mode((screen_size_x, screen_size_y))
+screen_width = 900
+screen_height = 900
+screen = pg.display.set_mode((screen_width, screen_height))
 
 pg.display.set_caption('"<färm::sîm>"')
 
@@ -22,8 +22,8 @@ tile_size = 128
 tile_gap = 10
 tiles_x = 6
 tiles_y = 6
-tile_offset_x = (screen_size_x - tile_size * tiles_x) / 2
-tile_offset_y = (screen_size_y - tile_size * tiles_y) / 2
+tile_offset_x = (screen_width - tile_size * tiles_x) / 2
+tile_offset_y = (screen_height - tile_size * tiles_y) / 2
 
 farm_tiles = []
 
@@ -45,14 +45,32 @@ for x in range(tiles_x):
 # ui
 class UI:
     def __init__(self):
-        self.manager = pgui.UIManager((screen_size_x, screen_size_y))
+        self.manager = pgui.UIManager((screen_width, screen_height))
 
         self.ui_window_shop = pgui.elements.UIWindow((0, 0, 0, 0), manager=self.manager, visible=False)
         self.ui_window_shop.is_enabled = False
 
         rect_button_shop = pg.Rect(0, 0, 100, 50)
-        self.button_shop = pgui.elements.UIButton(relative_rect=rect_button_shop, text='Shop', manager=self.manager,
-                                                  anchors={"bottom":"bottom","right":"right"})
+        self.button_shop = pgui.elements.UIButton(
+            relative_rect=rect_button_shop,
+            text='Shop',
+            manager=self.manager,
+            anchors={"bottom":"bottom","right":"right"}
+            )
+    
+    def draw_menu(self):
+        button_width = 200
+        button_height = 100
+        button_amount = 4
+        ui_window_menu_shop = (button_width + 10 + 100, button_amount * button_height + 40 + 120)
+        ui_window_menu_shop = (screen_width / 2 - ui_window_menu_shop[0] / 2,
+                              screen_height / 2 - ui_window_menu_shop[1] / 2)
+        rect_ui_window_shop = pg.Rect(ui_window_menu_shop, ui_window_menu_shop)
+        self.ui_window_shop = pgui.elements.UIWindow(rect=rect_ui_window_shop, manager=self.manager, window_display_title="Shop")
+
+    def kill_menu(self):
+        self.ui_window_shop.kill()
+
 
 running = True
 
